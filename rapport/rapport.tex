@@ -1,5 +1,5 @@
 % Preamble
-\documentclass[a4paper, twoside, 12pt]{article}
+\documentclass[a4paper, twoside, 11pt]{article}
 
 % Packages
 \usepackage[utf8]{inputenc}
@@ -14,32 +14,54 @@
 \makeatother
 
 \renewcommand\Authfont{\fontsize{12}{14.4}\selectfont}
-\renewcommand\Affilfont{\fontsize{9}{10.8}\itshape}
+%\renewcommand\Affilfont{\fontsize{9}{10.8}\itshape}
 
-\title{\huge Structured prediction for natural language processing}
-\author{FRONTEAU Timothée, JONAS William, LEPETIT Maxime, MARTZLOFF Alice, MOUSSEAUX Vincent}
-\affil{Aix-Marseille Université}
+\title{Structured Prediction for Natural Language Processing}
+\author{Fronteau T., Jonas W., Lepetit M., Martzloff A., Mousseaux V.}
+%\affil{Aix-Marseille Université}
 
 % Document
 \begin{document}
 
  \maketitle
- \section{Interpretable Semantic Textual Similarity}
-    L'objectif de ce projet est de proposer et d'évaluer un modèle à l’état de l’art pour résoudre la tâche de similarité textuelle sémantique (STS).
+ \section{Similarité sémantique entre phrases}
+    L'objectif de ce projet est d'implémenter et d'évaluer un modèle à l’état de l’art pour résoudre une tâche de similarité textuelle sémantique (STS).
 
     \subsection{Description de la tâche}
 
         \subsubsection{Campagne d’évaluation SEMEVAL}
 
-    La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. La STS mesure le degré d'équivalence sémantique entre des fragments de texte appariés. La STS interprétable (iSTS) ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants devaient d'abord identifier les fragments dans chaque phrase, puis aligner les fragments des deux phrases en indiquant la relation et le score de similarité de chaque alignement.
+    Les campagnes SEMEVAL sont organisées tous les ans et regroupent plusieurs défis en lien avec la représentation du sens du texte. La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. Elle consiste à comparer deux phrases en anglais selon leur similarité. Cependant, au lieu de comparer les phrases entières, ici il faut d’abord découper la phrase en segments. En effet, la STS mesure le degré d'équivalence sémantique entre des segments de texte appariés. La STS interprétable (iSTS) quant à elle ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants doivent d'abord identifier les segments dans chaque phrase, puis aligner les segments des deux phrases en indiquant la relation et le score de similarité de chaque alignement. Nous nous contenterons d'établir le score de similarité et n'indiquerons donc pas quelle est la relation (équivalence, implication, ...) entre les segments comparables dans les paires de phrases.
 
         \subsubsection{Approche empirique}
 
-    Bla bla.
+    \paragraph{Identification des fragments}
+    \hfill \break
+    \textit{En entrée}: deux fichiers. Le premier contient les premières phrases de chaque paire. Le second contient les deuxièmes phrases de chaque paire. \hfill \break
+    \textit{En sortie}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' and ']' pour marquer les fragments. Le second contient les deuxièmes phrases de chaque paire avec des '[' and ']' pour marquer les fragments.
+
+ \paragraph{Alignement et score de similarité}
+    \hfill \break
+    \textit{En entrée}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' et ']' pour marquer les fragments. Le second contient les deuxièmes phrases de chaque paire avec des '[' et ']' pour marquer les fragments. \hfill \break
+    \textit{En sortie}: Un fichier .wa (de type xml) qui, pour une ligne par alignement, contient l'indice d'un token de la première phrase d'une paire, l'indice d'un token de la deuxième phrase de la paire et le score de similarité associé.
+
     \subsection{Cadre}
 
-    Dans nos article
+    Dans la section suivante, nous décrirons les méthodes d'approche et techniques d'apprentissage proposés par la communauté scientifique en réponse à la \og shared task \fg{}.
+
+        \subsubsection{DTSim}
+        Décrire les points forts et faibles de la méthode proposée, les questions résolues et celles qui restent à explorer, plus de détails sur les modèles adoptés ou créés pour résoudre la tâche.
+
+        \subsubsection{Inspire}
+        \subsubsection{FBK-HLT-NLP}
+            Multilayer perceptron
+        \subsubsection{IISCNLP}
+        \subsubsection{VENSESEVAL}
 
     \subsection{Baseline}
 
+    Parler de nos modèles baseline ! +- extrait de code ?
+
+    \subsection{À suivre...}
+     Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit entre autre les embedding et tokenizer mis à disposition dans les librairies transformers.
 \end{document}
