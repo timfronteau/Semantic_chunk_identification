@@ -4,9 +4,23 @@
 % Packages
 \usepackage[utf8]{inputenc}
 \usepackage[english,french]{babel}
+\usepackage[a4paper]{geometry}
 \usepackage[affil-it]{authblk}
 \usepackage{etoolbox}
 \usepackage{lmodern}
+
+%%% Biblio %%%
+
+\AtBeginDocument{\setlength\bibitemsep{0.5\baselineskip}}
+
+\usepackage[
+    backend=biber,        % compilateur par défaut pour biblatex
+%sorting=nyt,          % trier par nom, année, titre
+    style=ieee,
+    natbib=true
+%bibstyle=alphabetic,  % style de bibliographie alphabétique
+]{biblatex}
+\addbibresource{biblio.bib}
 
 %%% Options taille police titre/auteurs  %%%
 \makeatletter
@@ -54,14 +68,20 @@
 
         \subsubsection{Inspire}
         \subsubsection{FBK-HLT-NLP}
-            Multilayer perceptron
+
+Magnolia et al. \cite{magnolini} proposent une approche multitâche en apprentissage profond. Pour chaque sous-tâche -prédiction de l’alignement au niveau des segments, du type de relation pour l’alignement et du score de similarité- ils utilisent un modèle de classification qui consiste en un unique perceptron multicouche. Le système met à profit 245 caractéristiques (linguistiques, embedding de mots, similarités de segments, etc.) tous les mêmes quelque soit la tâche.
+Leur système tire parti d'un ensemble d'apprentissage plus important avec des données de domaines différents, ce qui lui confère l’avantage d’être extensible et évolutif. Il peut aussi adopter d’autres fonctionnalités visant à améliorer la précision.
+L'étiquetage des types de relation entre les segments nécessite un nombre de classe important, rendant cette sous-tâche la plus difficile pour leur système.
+En outre, la comparaison entre le classement effectué à partir des phrases segmentées et brute montre que le système ne bénéficie pas de paires de phrases déjà découpées.
         \subsubsection{IISCNLP}
-        \subsubsection{VENSESEVAL}
+ Les auteurs du système IISCNLP \cite{tekumalla} proposent un algorithme d’alignement multiple : iMATCH. Il est basé sur de la programmation linéaire en nombre entier et un alignement monolingue au niveau des segments. Tout d’abord, un segment \og gold \fg{} est utilisé. Si aucun n’est donné, la tâche est passée à \textit{OpenNLP Chunk} et \textit{Standford-core-nlp}. Ils utilisent ensuite une forêt d'arbres décisionnels \og one-vs-rest \fg{}. Les ponctuations et espaces inutiles sont retirés, les unicodes sont convertis au format ASCII et une normalisation est effectuée puis des caractéristiques sont extraites pour la classification. Leur normalisation est effectuée avant l’entraînement et la prédiction. Enfin, le classifieur qui prédit le score utilise une autre forêt d'arbres décisionnels \og one-vs-rest \fg{}. Chaque score est considéré comme une classe entre 0 et 1 où 0 signifie que les segments ne sont pas alignés. L’inconvénient du système est qu’il est soumis à la qualité des segments. Elle a un grand impacte sur l’alignement et donc sur le score final. Dans la plupart des cas, l’algorithme prédit le meilleur score d’alignement. Cependant, il bénéficierait d’autres caractéristiques qui améliorent la précision de la classification. Des techniques d’alignements simultanés pourraient aussi augmenter ses performances.
 
     \subsection{Baseline}
 
     Parler de nos modèles baseline ! +- extrait de code ?
 
     \subsection{À suivre...}
-     Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit entre autre les embedding et tokenizer mis à disposition dans les librairies transformers.
+     Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit entre autres les embedding et tokenizer mis à disposition dans les librairies transformers.
+
+    \printbibliography
 \end{document}
