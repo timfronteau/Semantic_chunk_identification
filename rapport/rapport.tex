@@ -1,15 +1,45 @@
-%! Author = alicemartzloff
-%! Date = 02/01/2022
-
 % Preamble
-\documentclass[11pt]{article}
+\documentclass[a4paper, twoside, 12pt]{article}
 
 % Packages
-\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[english,french]{babel}
+\usepackage[affil-it]{authblk}
+\usepackage{etoolbox}
+\usepackage{lmodern}
+
+%%% Options taille police titre/auteurs  %%%
+\makeatletter
+\patchcmd{\@maketitle}{\LARGE \@title}{\fontsize{16}{19.2}\selectfont\@title}{}{}
+\makeatother
+
+\renewcommand\Authfont{\fontsize{12}{14.4}\selectfont}
+\renewcommand\Affilfont{\fontsize{9}{10.8}\itshape}
+
+\title{\huge Structured prediction for natural language processing}
+\author{FRONTEAU Timothée, JONAS William, LEPETIT Maxime, MARTZLOFF Alice, MOUSSEAUX Vincent}
+\affil{Aix-Marseille Université}
 
 % Document
 \begin{document}
 
+ \maketitle
+ \section{Interpretable Semantic Textual Similarity}
+    L'objectif de ce projet est de proposer et d'évaluer un modèle à l’état de l’art pour résoudre la tâche de similarité textuelle sémantique (STS).
 
+    \subsection{Description de la tâche}
+
+        \subsubsection{Campagne d’évaluation SEMEVAL}
+
+    La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. La STS mesure le degré d'équivalence sémantique entre des fragments de texte appariés. La STS interprétable (iSTS) ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants devaient d'abord identifier les fragments dans chaque phrase, puis aligner les fragments des deux phrases en indiquant la relation et le score de similarité de chaque alignement.
+
+        \subsubsection{Approche empirique}
+
+    Bla bla.
+    \subsection{Cadre}
+
+    Dans nos article
+
+    \subsection{Baseline}
 
 \end{document}
