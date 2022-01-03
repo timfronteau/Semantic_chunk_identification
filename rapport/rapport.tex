@@ -45,18 +45,18 @@
 
         \subsubsection{Campagne d’évaluation SEMEVAL}
 
-    Les campagnes SEMEVAL sont organisées tous les ans et regroupent plusieurs défis en lien avec la représentation du sens du texte. La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. Elle consiste à comparer deux phrases en anglais selon leur similarité. Cependant, au lieu de comparer les phrases entières, ici il faut d’abord découper la phrase en segments. En effet, la STS mesure le degré d'équivalence sémantique entre des segments de texte appariés. La STS interprétable (iSTS) quant à elle ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants doivent d'abord identifier les segments dans chaque phrase, puis aligner les segments des deux phrases en indiquant la relation et le score de similarité de chaque alignement. Nous nous contenterons d'établir le score de similarité et n'indiquerons donc pas quelle est la relation (équivalence, implication, ...) entre les segments comparables dans les paires de phrases.
+    Les campagnes SEMEVAL sont organisées tous les ans et regroupent plusieurs défis en lien avec la représentation du sens du texte. La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. Elle consiste à comparer deux phrases en anglais selon leur similarité. Cependant, au lieu de comparer les phrases entières, ici il faut d’abord découper la phrase en segments. En effet, la STS mesure le degré d'équivalence sémantique entre des segments de texte appariés. La STS interprétable (iSTS), quant à elle, ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants doivent d'abord identifier les segments dans chaque phrase, puis aligner les segments des deux phrases en indiquant la relation et le score de similarité de chaque alignement. Nous nous contenterons d'établir le score de similarité et n'indiquerons donc pas quelle est la relation (équivalence, implication, ...) entre les segments comparables dans les paires de phrases.
 
         \subsubsection{Approche empirique}
 
-    \paragraph{Identification des fragments}
+    \paragraph{Identification des segments}
     \hfill \break
     \textit{En entrée}: deux fichiers. Le premier contient les premières phrases de chaque paire. Le second contient les deuxièmes phrases de chaque paire. \hfill \break
-    \textit{En sortie}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' et ']' pour marquer les fragments. Le second contient les deuxièmes phrases de chaque paire avec des '[' et ']' pour marquer les fragments.
+    \textit{En sortie}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' et ']' pour marquer les segments. Le second contient les deuxièmes phrases de chaque paire avec des '[' et ']' pour marquer les segments.
 
  \paragraph{Alignement et score de similarité}
     \hfill \break
-    \textit{En entrée}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' et ']' pour marquer les fragments. Le second contient les deuxièmes phrases de chaque paire avec des '[' et ']' pour marquer les fragments. \hfill \break
+    \textit{En entrée}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' et ']' pour marquer les segments. Le second contient les deuxièmes phrases de chaque paire avec des '[' et ']' pour marquer les segments. \hfill \break
     \textit{En sortie}: Un fichier .wa (de type xml) qui, pour une ligne par alignement, contient l'indice d'un token de la première phrase d'une paire, l'indice d'un token de la deuxième phrase de la paire et le score de similarité associé.
 
     \subsection{Cadre}
@@ -72,9 +72,9 @@ Les résultats du modèle CRF sont ensuite enrichis par l'ajout de règles qui p
 
         \subsubsection{Inspire}
 
-Le système Inspire de Kazmi et Schüller \cite{kazmi} repose sur l'utilisation d'un solveur Answer Set, qui utilise une syntaxe et des règles de programmation logique connues sous le nom de Answer Set Programming (ASP). Dans un premier temps, le découpage en morceaux est effectué en utilisant l'ASP, à partir d'un POS-tagging et d'une analyse syntaxique par transition. Ensuite, l'utilisation d'outils déjà entrainés permet d'associer à chaque morceau des caractéristiques en effectuant un POS-tagging, un NER-tagging, un calcul de similarité entre morceaux à l'aide de Word2Vec, et une recherche de synonymes dans WordNet. Enfin, un ensemble de règles inspirées de NeRoSim terminent de définir le problème ASP, qui est donc résolu sans nécessiter d'apprentissage.
+Le système Inspire de Kazmi et Schüller \cite{kazmi} repose sur l'utilisation d'un solveur Answer Set, qui utilise une syntaxe et des règles de programmation logique connues sous le nom de Answer Set Programming (ASP). Dans un premier temps, le découpage en segments est effectué en utilisant l'ASP, à partir d'un POS-tagging et d'une analyse syntaxique par transition. Ensuite, l'utilisation d'outils déjà entrainés permet d'associer à chaque segment des caractéristiques en effectuant un POS-tagging, un NER-tagging, un calcul de similarité entre segments à l'aide de Word2Vec, et une recherche de synonymes dans WordNet. Enfin, un ensemble de règles inspirées de NeRoSim terminent de définir le problème ASP, qui est donc résolu sans nécessiter d'apprentissage.
 
-Le système Inspire est dans le top 3 des systèmes présentés lors du concours lorsqu'il s'agit de l'évaluation des bases de données Headlines et Images, mais il est le plus mauvais sur les données Student-Aswers. En effet, le découpage en morceaux du système repose sur une analyse par transition, qui est peu performante dans le cadre de données qui ne sont pas syntaxiquement correctes comme Student-Answers. L'approche du système Inspire apporte la puissance des solveurs d'ASP au set de règles définies dans NeRoSim. Pour améliorer le système, les concepteurs du système espèrent introduire de nouvelles informations sémantiques pour nourrir le système et optimiser l'utilisation de solveurs au regard de nouveaux travaux.
+Le système Inspire est dans le top 3 des systèmes présentés lors du concours, pour l'évaluation des bases de données Headlines et Images, mais il est le plus mauvais sur les données Student-Aswers. En effet, le découpage en segments du système repose sur une analyse par transition, qui est peu performante dans le cadre de données qui ne sont pas syntaxiquement correctes comme Student-Answers. L'approche du système Inspire apporte la puissance des solveurs d'ASP au set de règles définies dans NeRoSim. Pour améliorer le système, les concepteurs du système espèrent introduire de nouvelles informations sémantiques pour nourrir le système et optimiser l'utilisation de solveurs au regard de nouveaux travaux.
 
         \subsubsection{FBK-HLT-NLP}
 
