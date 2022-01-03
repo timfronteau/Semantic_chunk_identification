@@ -61,7 +61,7 @@
 
     \subsection{Cadre}
 
-    Dans la section suivante, nous décrirons les méthodes d'approche et techniques d'apprentissage proposés par la communauté scientifique en réponse à la \og shared task \fg{}.
+    Dans la section suivante, nous décrirons les méthodes d'approche et techniques d'apprentissage proposées par la communauté scientifique en réponse à la \og shared task \fg{}.
 
         \subsubsection{DTSim}
 
@@ -74,14 +74,14 @@ Les résultats du modèle CRF sont ensuite enrichis par l'ajout de règles qui p
 
 Le système Inspire de Kazmi et Schüller \cite{kazmi} repose sur l'utilisation d'un solveur Answer Set, qui utilise une syntaxe et des règles de programmation logique connues sous le nom de Answer Set Programming (ASP). Dans un premier temps, le découpage en segments est effectué en utilisant l'ASP, à partir d'un POS-tagging et d'une analyse syntaxique par transition. Ensuite, l'utilisation d'outils déjà entrainés permet d'associer à chaque segment des caractéristiques en effectuant un POS-tagging, un NER-tagging, un calcul de similarité entre segments à l'aide de Word2Vec, et une recherche de synonymes dans WordNet. Enfin, un ensemble de règles inspirées de NeRoSim terminent de définir le problème ASP, qui est donc résolu sans nécessiter d'apprentissage.
 
-Le système Inspire est dans le top 3 des systèmes présentés lors du concours, pour l'évaluation des bases de données Headlines et Images, mais il est le plus mauvais sur les données Student-Aswers. En effet, le découpage en segments du système repose sur une analyse par transition, qui est peu performante dans le cadre de données qui ne sont pas syntaxiquement correctes comme Student-Answers. L'approche du système Inspire apporte la puissance des solveurs d'ASP au set de règles définies dans NeRoSim. Pour améliorer le système, les concepteurs du système espèrent introduire de nouvelles informations sémantiques pour nourrir le système et optimiser l'utilisation de solveurs au regard de nouveaux travaux.
+Le système Inspire est dans le top 3 des systèmes présentés lors du concours, pour l'évaluation des bases de données Headlines et Images, mais il est le plus mauvais sur les données Student-Answers. En effet, le découpage en segments du système repose sur une analyse par transition, qui est peu performante dans le cadre de données qui ne sont pas syntaxiquement correctes comme Student-Answers. L'approche du système Inspire apporte la puissance des solveurs d'ASP au set de règles définies dans NeRoSim. Pour améliorer le système, les concepteurs du système espèrent introduire de nouvelles informations sémantiques pour nourrir le système et optimiser l'utilisation de solveurs au regard de nouveaux travaux.
 
         \subsubsection{FBK-HLT-NLP}
 
-Magnolini et al. \cite{magnolini} proposent une approche multitâche en apprentissage profond. Pour chaque sous-tâche -prédiction de l’alignement au niveau des segments, du type de relation pour l’alignement et du score de similarité- ils utilisent un modèle de classification qui consiste en un unique perceptron multicouche. Le système met à profit 245 caractéristiques (linguistiques, embedding de mots, similarités de segments, etc.) toutes les mêmes quelle que soit la tâche.
+Magnolini et al. \cite{magnolini} proposent une approche multitâche en apprentissage profond. Pour chaque sous-tâche (prédiction de l’alignement au niveau des segments, du type de relation pour l’alignement et du score de similarité) ils utilisent un modèle de classification qui consiste en un unique perceptron multicouche. Le système met à profit 245 caractéristiques (linguistiques, embedding de mots, similarités de segments, etc.) toutes les mêmes quelle que soit la tâche.
 Leur système tire parti d'un ensemble d'apprentissage plus important avec des données de domaines différents, ce qui lui confère l’avantage d’être extensible et évolutif. Il peut aussi adopter d’autres fonctionnalités visant à améliorer la précision.
 L'étiquetage des types de relation entre les segments nécessite un nombre de classe important, rendant cette sous-tâche la plus difficile pour leur système.
-En outre, la comparaison entre le classement effectué à partir des phrases segmentées et brute montre que le système ne bénéficie pas de paires de phrases déjà découpées.
+En outre, la comparaison entre le classement effectué à partir des phrases segmentées et brutes montre que le système ne bénéficie pas de paires de phrases déjà découpées.
 
         \subsubsection{IISCNLP}
  Les auteurs du système IISCNLP \cite{tekumalla} proposent un algorithme d’alignement multiple : iMATCH. Il est basé sur de la programmation linéaire en nombre entier et un alignement monolingue au niveau des segments. Tout d’abord, un segment \og gold \fg{} est utilisé. Si aucun n’est donné, la tâche est passée à \textit{OpenNLP Chunk} et \textit{Standford-core-nlp}. Ils utilisent ensuite une forêt d'arbres décisionnels \og one-vs-rest \fg{}. Les ponctuations et espaces inutiles sont retirés, les unicodes sont convertis au format ASCII et une normalisation est effectuée puis des caractéristiques sont extraites pour la classification. Leur normalisation est effectuée avant l’entraînement et la prédiction. Enfin, le classifieur qui prédit le score utilise une autre forêt d'arbres décisionnels \og one-vs-rest \fg{}. Chaque score est considéré comme une classe entre 0 et 1 où 0 signifie que les segments ne sont pas alignés. L’inconvénient du système est qu’il est soumis à la qualité des segments. Elle a un grand impact sur l’alignement et donc sur le score final. Dans la plupart des cas, l’algorithme prédit le meilleur score d’alignement. Cependant, il bénéficierait d’autres caractéristiques qui améliorent la précision de la classification. Des techniques d’alignements simultanés pourraient aussi augmenter ses performances.
@@ -93,7 +93,7 @@ En outre, la comparaison entre le classement effectué à partir des phrases seg
     \subsubsection{Embedding de mots et création de segments}
  Afin de réaliser la segmentation des phrases, nous avons créé un modèle afin de prédire et délimiter les unités de sens dans une phrase. À l’aide de ce modèle, nous cherchons à réaliser l'encodage BIO d’une phrase, c’est-à-dire prédire un label pour chaque mot de la phrase parmi ‘B’ (Begin), ‘I’ (Inside) ou ‘O’ (Outside) ; ces significations faisant référence à l’appartenance du mot à une unité de sens. Nous avons fait le choix d’un modèle récursif de type \og Simple RNN \fg{}. Les étiquettes nous permettent ensuite de délimiter les segments de la phrase avant de passer à l’étape de leur alignement.
 
-Les données en entrée du réseau récurrent correspondent à des représentations vectorielles (issues d’une couche d’embeddings de GloVe) des mots d’une phrase, initialement tokenisés. Les étiquettes utilisés pour l'entraînement correspondent aux représentations \og one-hot  \fg{} des étiquettes BIO (encodés 0, 1, 2) de chacun des mots des phrases déjà segmentées mises à disposition dans le set de données du concours SemEval.
+Les données en entrée du réseau récurrent correspondent à des représentations vectorielles (issues d’une couche d’embeddings de GloVe) des mots d’une phrase, initialement tokenisés. Les étiquettes utilisées pour l'entraînement correspondent aux représentations \og one-hot  \fg{} des étiquettes BIO (encodées 0, 1, 2) de chacun des mots des phrases déjà segmentées mises à disposition dans le set de données du concours SemEval.
 
 \paragraph{POS-tagging}
 
@@ -113,7 +113,7 @@ N.B. : si les matrices $M$ et $M^{\prime}$ ont plus de lignes que de colonnes al
 Il faut donc faire attention à ce que le premier argument de la fonction \og linear\_sum\_assignment \fg{} soit toujours l’élément de plus petite taille.
 
     \subsection{À suivre...}
-     Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit entre autres les embedding et tokenizer mis à disposition dans les librairies transformers.
+     Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit notamment les embedding et tokenizer mis à disposition dans les librairies transformers.
 
     \printbibliography
 \end{document}
