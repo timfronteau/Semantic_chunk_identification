@@ -90,14 +90,19 @@ En outre, la comparaison entre le classement effectué à partir des phrases seg
 
     Dans cette section, nous décrivons les différentes briques du système baseline que nous avons implémenter afin de résoudre notre tâche.
 
-    \subsubsection{Embedding de mots et création de segments}
+    \subsubsection{Tokenisation et plongement lexical}
+
+Tout d’abord, on cherche à standardiser les données brutes pour les rendre plus faciles d'utilisation : c’est la phase de \og preprocessing \fg{}. On supprime les éléments qui ne sont pas nécessaires à l’analyse d’une phrase, par exemple, les ponctuations telles que \og , \fg{}, \og ; \fg{} ou bien \og - \fg{}. Tous les mots sont aussi passés en minuscule. Ensuite, vient la tokenisation. On sépare les mots d’une phrase en ce qu'on appelle des \og tokens \fg{}. Cela nous permet de travailler individuellement sur chaque mot.
+Cependant, un ordinateur ne peut pas réaliser de calculs sur une chaîne de caractères. L’embedding pallie ce problème en transformant un mot en un vecteur. Nous choisissons d’utiliser des vecteurs de dimension 100. On pourrait entraîner un embedding par nous-même, mais ce n’est pas le cœur de notre sujet, c'est pourquoi on préfère utiliser des embeddings pré-entraînés. Il existe trois embeddings faciles à utiliser : \textit{Word2Vec}, \textit{GloVe} et \textit{FastText}. Pour le système de base, on choisit \textit{GloVe}, mais dans une version plus avancée, on pourra réaliser plusieurs embeddings et choisir celui donnant le meilleur résultat. On obtient finalement chaque mot de nos données sous forme vectorielle pouvant être lu et exploité facilement par notre réseau de neurones.
+
+ \paragraph{POS-tagging}
+
+Dans une optique d’amélioration de notre segmentation et de développement d'un modèle multimodal, nous avons pensé que l’ajout d’un \og POS-tagging \fg{} aux caractéristiques d’entrée de notre modèle pourrait être intéressant. Nous avons donc utilisé l’API \textit{NLTK} pour effectuer un étiquetage automatique à partir des phrases tokenisées de la base de données. Ces nouvelles caractéristiques ne sont pas encore utilisées dans notre modèle, mais sont prêtes si besoin.
+
+    \subsubsection{Création de segments}
  Afin de réaliser la segmentation des phrases, nous avons créé un modèle afin de prédire et délimiter les unités de sens dans une phrase. À l’aide de ce modèle, nous cherchons à réaliser l'encodage BIO d’une phrase, c’est-à-dire prédire un label pour chaque mot de la phrase parmi ‘B’ (Begin), ‘I’ (Inside) ou ‘O’ (Outside) ; ces significations faisant référence à l’appartenance du mot à une unité de sens. Nous avons fait le choix d’un modèle récursif de type \og Simple RNN \fg{}. Les étiquettes nous permettent ensuite de délimiter les segments de la phrase avant de passer à l’étape de leur alignement.
 
 Les données en entrée du réseau récurrent correspondent à des représentations vectorielles (issues d’une couche d’embeddings de GloVe) des mots d’une phrase, initialement tokenisés. Les étiquettes utilisées pour l'entraînement correspondent aux représentations \og one-hot  \fg{} des étiquettes BIO (encodées 0, 1, 2) de chacun des mots des phrases déjà segmentées mises à disposition dans le set de données du concours SemEval.
-
-\paragraph{POS-tagging}
-
-Dans une optique d’amélioration de notre segmentation et de développement d'un modèle multimodal, nous avons pensé que l’ajout d’un \og POS-tagging \fg{} aux caractéristiques d’entrée de notre modèle pourrait être intéressant. Nous avons donc utilisé l’API \textit{NLTK} pour effectuer un étiquetage automatique à partir des phrases tokenisées de la base de données. Ces nouvelles caractéristiques ne sont pas encore utilisées dans notre modèle, mais sont prêtes si besoin.
 
 \subsubsection{Alignement des segments}
 
