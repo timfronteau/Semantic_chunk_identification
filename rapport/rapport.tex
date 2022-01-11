@@ -8,6 +8,7 @@
 \usepackage[affil-it]{authblk}
 \usepackage{etoolbox}
 \usepackage{lmodern}
+\usepackage{hyperref}
 
 %%% Biblio %%%
 
@@ -156,6 +157,7 @@ De même, on voit que le score de similarité le plus important (score 5 entre \
      Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit notamment les embedding et tokenizer mis à disposition dans les librairies transformers.
 
  \subsubsection{Architecture}
+ Lien vers le code-source du modèle : \href{https://github.com/timfronteau/Semantic_chunk_identification}{CLIQUER ICI !}
  \subsubsection{Ressources supplémentaires}
  \subsubsection{Étude des performances}
  \paragraph{Segments comparables}
@@ -166,6 +168,14 @@ Pour remédier à ce problème qui pourrait grandement diminuer les performances
 \textbf{N.B. :} Dans le cas de \og 12 \fg{} et \og amour \fg{}, pas sûr que ça résolve notre problème...
 
  \textit{entity\_group}(12) = \textit{entity\_group}(amour) = NP
+
+ \subsection{Analyse des résultats obtenus}
+ \subsubsection{Évaluation}
+ [comparer aux résultats de 2016]
+ \subsubsection{Poits forts / faibles}
+ [Avantage et inconvénient de notre modèle...]
+ \subsubsection{Perspectives}
+ [Si on avait eu plus de temps, on aurait fait ...]
 
     \printbibliography
 \end{document}
