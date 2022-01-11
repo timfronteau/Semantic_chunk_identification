@@ -159,23 +159,19 @@ De même, on voit que le score de similarité le plus important (score 5 entre \
  \subsubsection{Architecture}
  Lien vers le code-source du modèle : \href{https://github.com/timfronteau/Semantic_chunk_identification}{CLIQUER ICI !}
  \subsubsection{Ressources supplémentaires}
- \subsubsection{Étude des performances}
- \paragraph{Segments comparables}
-        \hfill \break
-En nous inspirant de \cite{banjade}, nous allons introduire des règles dans l’alignement des segments pour aligner uniquement ceux qui sont \og comparables \fg{} et ainsi améliorer les performances de notre modèle à l'état de l'art. En effet, nous avons remarqué, après avoir fait un \og embedding \fg{} en utilisant \textit{SentenceTransformer}, que les tokens \og 12 \fg{} et \og amour \fg{} ont une similarité du cosinus plus élevée que les tokens \og amour \fg{} et  \og haine \fg{}. Ceci est contre-intuitif étant donné que \og amour \fg{} et \og haine \fg{} sont tous les deux des noms communs et appartiennent à la même thématique contrairement aux deux premiers. C'est peut-être dû au fait qu'ils sont antonymes l’un de l’autre, mais les similarités du cosinus sont toutes les deux positives ce qui contredit cette hypothèse.
-Pour remédier à ce problème qui pourrait grandement diminuer les performances de notre modèle, nous décidons donc d’uniquement aligner les segments correspondant au même type d’entité NER. Pour cela, nous utilisons la variable \textit{entity\_group} renvoyée pour chaque segment par notre modèle.
-
-\textbf{N.B. :} Dans le cas de \og 12 \fg{} et \og amour \fg{}, pas sûr que ça résolve notre problème...
-
- \textit{entity\_group}(12) = \textit{entity\_group}(amour) = NP
 
  \subsection{Analyse des résultats obtenus}
  \subsubsection{Évaluation}
+ Étude des performances
  [comparer aux résultats de 2016]
- \subsubsection{Poits forts / faibles}
+ \subsubsection{Points forts / faibles}
  [Avantage et inconvénient de notre modèle...]
+ Cf. alignemnt de phrases de même longueur !
  \subsubsection{Perspectives}
- [Si on avait eu plus de temps, on aurait fait ...]
-
+ \paragraph{Segments comparables}
+       \hfill \break
+En nous inspirant de \cite{banjade}, nous allons introduire des règles dans l’alignement des segments pour aligner uniquement ceux qui sont \og comparables \fg{} et ainsi améliorer les performances de notre modèle à l'état de l'art. En effet, nous avons remarqué, après avoir fait un \og embedding \fg{} en utilisant \textit{SentenceTransformer}, que les tokens \og 12 \fg{} et \og amour \fg{} ont une similarité du cosinus plus élevée que les tokens \og amour \fg{} et  \og haine \fg{}. Ceci est contre-intuitif étant donné que \og amour \fg{} et \og haine \fg{} sont tous les deux des noms communs et appartiennent à la même thématique contrairement aux deux premiers. C'est peut-être dû au fait qu'ils sont antonymes l’un de l’autre, mais les similarités du cosinus sont toutes les deux positives ce qui contredit cette hypothèse.
+Pour remédier à ce problème qui pourrait grandement diminuer les performances de notre modèle, nous décidons donc d’uniquement aligner les segments correspondant au même type d’entité NER. Pour cela, nous utilisons la variable \textit{entity\_group} renvoyée pour chaque segment par notre modèle.
+ \paragraph{Top du top} serait de fine-tuner le modèle de chunkage de BERT ?
     \printbibliography
 \end{document}
