@@ -41,11 +41,43 @@
  \section{Similarité sémantique entre phrases}
     L'objectif de ce projet est d'implémenter et d'évaluer un modèle à l’état de l’art pour résoudre une tâche de similarité textuelle sémantique (STS).
 
-    \subsection{Description de la tâche}
+    \subsection{Tâche}
 
         \subsubsection{Campagne d’évaluation SEMEVAL}
 
     Les campagnes SEMEVAL sont organisées tous les ans et regroupent plusieurs défis en lien avec la représentation du sens du texte. La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. Elle consiste à comparer deux phrases en anglais selon leur similarité. Cependant, au lieu de comparer les phrases entières, ici il faut d’abord découper la phrase en segments. En effet, la STS mesure le degré d'équivalence sémantique entre des segments de texte appariés. La STS interprétable (iSTS), quant à elle, ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants doivent d'abord identifier les segments dans chaque phrase, puis aligner les segments des deux phrases en indiquant la relation et le score de similarité de chaque alignement. Nous nous contenterons d'établir le score de similarité et n'indiquerons donc pas quelle est la relation (équivalence, implication, ...) entre les segments comparables dans les paires de phrases.
+
+        \subsubsection{Shared Task}
+ Dans cette section, nous décrivons les méthodes d'approche et techniques d'apprentissage proposées par la communauté scientifique en réponse à la \og shared task \fg{}.
+
+            \paragraph{DTSim}
+        \hfill \break
+        Après une phase de preprocessing, Banjade et al. \cite{banjade} utilisent un modèle statistique Conditional Random Fields (CRF) pour la création des segments qui permet de prendre en compte les dépendances entre les différentes prédictions. Pour cela, le modèle utilise notamment comme entrées les mots suivant et précédant le mot courant ainsi que la partie de discours de chacun des trois mots.
+Les résultats du modèle CRF sont ensuite enrichis par l'ajout de règles qui permettent d'obtenir des segments plus intéressants d'un point de vue lexical. Le test du modèle présenté comparé à deux autres (\textit{OpenNLP Chunk} et O-NLP enrichi avec les règles ci-dessus) montre que le modèle développé a de bien meilleures performances et que l'ajout de règles permet effectivement la création de meilleurs segments.
+
+ Pour l'alignement des segments, Banjade et al. se base sur un autre modèle développé par Banjade et al \cite{banjadeautre} qui utilise un score de similarité entre les mots pour trouver les segments les plus ressemblants. Un alignement est d'abord effectué entre les mots des deux segments pour déterminer leur score de similarité en utilisant la méthode de Kuhn-Munkres puis un second alignement est effectué afin de maximiser le score. Excepté les outils de preprocessing, l'équipe du projet n'utilise pas de modèle de machine learning se privant ainsi d'outils à fortes capacités et prometteurs en traitement du langage.
+
+        \paragraph{Inspire}
+        \hfill \break
+Le système Inspire de Kazmi et Schüller \cite{kazmi} repose sur l'utilisation d'un solveur Answer Set, qui utilise une syntaxe et des règles de programmation logique connues sous le nom de Answer Set Programming (ASP). Dans un premier temps, le découpage en segments est effectué en utilisant l'ASP, à partir d'un POS-tagging et d'une analyse syntaxique par transition. Ensuite, l'utilisation d'outils déjà entrainés permet d'associer à chaque segment des caractéristiques en effectuant un POS-tagging, un NER-tagging, un calcul de similarité entre segments à l'aide de Word2Vec, et une recherche de synonymes dans WordNet. Enfin, un ensemble de règles inspirées de NeRoSim terminent de définir le problème ASP, qui est donc résolu sans nécessiter d'apprentissage.
+
+Le système Inspire est dans le top 3 des systèmes présentés lors du concours, pour l'évaluation des bases de données Headlines et Images, mais il est le plus mauvais sur les données Student-Answers. En effet, le découpage en segments du système repose sur une analyse par transition, qui est peu performante dans le cadre de données qui ne sont pas syntaxiquement correctes comme Student-Answers. L'approche du système Inspire apporte la puissance des solveurs d'ASP au set de règles définies dans NeRoSim. Pour améliorer le système, les concepteurs du système espèrent introduire de nouvelles informations sémantiques pour nourrir le système et optimiser l'utilisation de solveurs au regard de nouveaux travaux.
+
+        \paragraph{FBK-HLT-NLP}
+        \hfill \break
+Magnolini et al. \cite{magnolini} proposent une approche multitâche en apprentissage profond. Pour chaque sous-tâche (prédiction de l’alignement au niveau des segments, du type de relation pour l’alignement et du score de similarité) ils utilisent un modèle de classification qui consiste en un unique perceptron multicouche. Le système met à profit 245 caractéristiques (linguistiques, embedding de mots, similarités de segments, etc.) toutes les mêmes quelle que soit la tâche.
+Leur système tire parti d'un ensemble d'apprentissage plus important avec des données de domaines différents, ce qui lui confère l’avantage d’être extensible et évolutif. Il peut aussi adopter d’autres fonctionnalités visant à améliorer la précision.
+L'étiquetage des types de relation entre les segments nécessite un nombre de classe important, rendant cette sous-tâche la plus difficile pour leur système.
+En outre, la comparaison entre le classement effectué à partir des phrases segmentées et brutes montre que le système ne bénéficie pas de paires de phrases déjà découpées.
+
+        \paragraph{IISCNLP}
+        \hfill \break
+ Les auteurs du système IISCNLP \cite{tekumalla} proposent un algorithme d’alignement multiple : iMATCH. Il est basé sur de la programmation linéaire en nombre entier et un alignement monolingue au niveau des segments. Tout d’abord, un segment \og gold \fg{} est utilisé. Si aucun n’est donné, la tâche est passée à \textit{OpenNLP Chunk} et \textit{Standford-core-nlp}. Ils utilisent ensuite une forêt d'arbres décisionnels \og one-vs-rest \fg{}. Les ponctuations et espaces inutiles sont retirés, les unicodes sont convertis au format ASCII et une normalisation est effectuée puis des caractéristiques sont extraites pour la classification. Leur normalisation est effectuée avant l’entraînement et la prédiction. Enfin, le classifieur qui prédit le score utilise une autre forêt d'arbres décisionnels \og one-vs-rest \fg{}. Chaque score est considéré comme une classe entre 0 et 1 où 0 signifie que les segments ne sont pas alignés. L’inconvénient du système est qu’il est soumis à la qualité des segments. Elle a un grand impact sur l’alignement et donc sur le score final. Dans la plupart des cas, l’algorithme prédit le meilleur score d’alignement. Cependant, il bénéficierait d’autres caractéristiques qui améliorent la précision de la classification. Des techniques d’alignements simultanés pourraient aussi augmenter ses performances.
+
+
+    \subsection{Cadre expérimental}
+
+        \subsubsection{Description des données}
 
         \subsubsection{Approche empirique}
 
@@ -59,32 +91,7 @@
     \textit{En entrée}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' et ']' pour marquer les segments. Le second contient les deuxièmes phrases de chaque paire avec des '[' et ']' pour marquer les segments. \hfill \break
     \textit{En sortie}: Un fichier .wa (de type xml) qui, pour une ligne par alignement, contient l'indice d'un token de la première phrase d'une paire, l'indice d'un token de la deuxième phrase de la paire et le score de similarité associé.
 
-    \subsection{Cadre}
 
-    Dans la section suivante, nous décrirons les méthodes d'approche et techniques d'apprentissage proposées par la communauté scientifique en réponse à la \og shared task \fg{}.
-
-        \subsubsection{DTSim}
-
-        Après une phase de preprocessing, Banjade et al. \cite{banjade} utilisent un modèle statistique Conditional Random Fields (CRF) pour la création des segments qui permet de prendre en compte les dépendances entre les différentes prédictions. Pour cela, le modèle utilise notamment comme entrées les mots suivant et précédant le mot courant ainsi que la partie de discours de chacun des trois mots.
-Les résultats du modèle CRF sont ensuite enrichis par l'ajout de règles qui permettent d'obtenir des segments plus intéressants d'un point de vue lexical. Le test du modèle présenté comparé à deux autres (\textit{OpenNLP Chunk} et O-NLP enrichi avec les règles ci-dessus) montre que le modèle développé a de bien meilleures performances et que l'ajout de règles permet effectivement la création de meilleurs segments.
-
- Pour l'alignement des segments, Banjade et al. se base sur un autre modèle développé par Banjade et al \cite{banjadeautre} qui utilise un score de similarité entre les mots pour trouver les segments les plus ressemblants. Un alignement est d'abord effectué entre les mots des deux segments pour déterminer leur score de similarité en utilisant la méthode de Kuhn-Munkres puis un second alignement est effectué afin de maximiser le score. Excepté les outils de preprocessing, l'équipe du projet n'utilise pas de modèle de machine learning se privant ainsi d'outils à fortes capacités et prometteurs en traitement du langage.
-
-        \subsubsection{Inspire}
-
-Le système Inspire de Kazmi et Schüller \cite{kazmi} repose sur l'utilisation d'un solveur Answer Set, qui utilise une syntaxe et des règles de programmation logique connues sous le nom de Answer Set Programming (ASP). Dans un premier temps, le découpage en segments est effectué en utilisant l'ASP, à partir d'un POS-tagging et d'une analyse syntaxique par transition. Ensuite, l'utilisation d'outils déjà entrainés permet d'associer à chaque segment des caractéristiques en effectuant un POS-tagging, un NER-tagging, un calcul de similarité entre segments à l'aide de Word2Vec, et une recherche de synonymes dans WordNet. Enfin, un ensemble de règles inspirées de NeRoSim terminent de définir le problème ASP, qui est donc résolu sans nécessiter d'apprentissage.
-
-Le système Inspire est dans le top 3 des systèmes présentés lors du concours, pour l'évaluation des bases de données Headlines et Images, mais il est le plus mauvais sur les données Student-Answers. En effet, le découpage en segments du système repose sur une analyse par transition, qui est peu performante dans le cadre de données qui ne sont pas syntaxiquement correctes comme Student-Answers. L'approche du système Inspire apporte la puissance des solveurs d'ASP au set de règles définies dans NeRoSim. Pour améliorer le système, les concepteurs du système espèrent introduire de nouvelles informations sémantiques pour nourrir le système et optimiser l'utilisation de solveurs au regard de nouveaux travaux.
-
-        \subsubsection{FBK-HLT-NLP}
-
-Magnolini et al. \cite{magnolini} proposent une approche multitâche en apprentissage profond. Pour chaque sous-tâche (prédiction de l’alignement au niveau des segments, du type de relation pour l’alignement et du score de similarité) ils utilisent un modèle de classification qui consiste en un unique perceptron multicouche. Le système met à profit 245 caractéristiques (linguistiques, embedding de mots, similarités de segments, etc.) toutes les mêmes quelle que soit la tâche.
-Leur système tire parti d'un ensemble d'apprentissage plus important avec des données de domaines différents, ce qui lui confère l’avantage d’être extensible et évolutif. Il peut aussi adopter d’autres fonctionnalités visant à améliorer la précision.
-L'étiquetage des types de relation entre les segments nécessite un nombre de classe important, rendant cette sous-tâche la plus difficile pour leur système.
-En outre, la comparaison entre le classement effectué à partir des phrases segmentées et brutes montre que le système ne bénéficie pas de paires de phrases déjà découpées.
-
-        \subsubsection{IISCNLP}
- Les auteurs du système IISCNLP \cite{tekumalla} proposent un algorithme d’alignement multiple : iMATCH. Il est basé sur de la programmation linéaire en nombre entier et un alignement monolingue au niveau des segments. Tout d’abord, un segment \og gold \fg{} est utilisé. Si aucun n’est donné, la tâche est passée à \textit{OpenNLP Chunk} et \textit{Standford-core-nlp}. Ils utilisent ensuite une forêt d'arbres décisionnels \og one-vs-rest \fg{}. Les ponctuations et espaces inutiles sont retirés, les unicodes sont convertis au format ASCII et une normalisation est effectuée puis des caractéristiques sont extraites pour la classification. Leur normalisation est effectuée avant l’entraînement et la prédiction. Enfin, le classifieur qui prédit le score utilise une autre forêt d'arbres décisionnels \og one-vs-rest \fg{}. Chaque score est considéré comme une classe entre 0 et 1 où 0 signifie que les segments ne sont pas alignés. L’inconvénient du système est qu’il est soumis à la qualité des segments. Elle a un grand impact sur l’alignement et donc sur le score final. Dans la plupart des cas, l’algorithme prédit le meilleur score d’alignement. Cependant, il bénéficierait d’autres caractéristiques qui améliorent la précision de la classification. Des techniques d’alignements simultanés pourraient aussi augmenter ses performances.
 
     \subsection{Baseline}
 
@@ -117,8 +124,46 @@ En s’inspirant des modèles de Banjade et al. \cite{banjade}  \cite{banjadeaut
 N.B. : si les matrices $M$ et $M^{\prime}$ ont plus de lignes que de colonnes alors certaines combinaisons ne seront pas testées pour trouver la solution optimale.
 Il faut donc faire attention à ce que le premier argument de la fonction \og linear\_sum\_assignment \fg{} soit toujours l’élément de plus petite taille.
 
-    \subsection{À suivre...}
+ \subsubsection{Analyse des résultats}
+
+ En testant notre modèle sur des phrases issues de \textit{STSint.input.headlines}, on remarque que notre modèle renvoie uniquement 3 valeurs de score de similarité entre deux segments : 0, 2 et 5. Ceci est notamment dû au fait que les scores de similarité entre deux segments sont modifiés pour obtenir un score entre 0 et 5 : on fait un \textit{min-max scaling} des scores, puis on les multiplie par 5 et on les arrondit enfin à l'entier le plus proche.
+
+ Si on regarde les paires de phrases ayant un score de similarité au moins égal à 5, on note que ces scores sont obtenus pour des segments de grande taille (au moins trois tokens). Ainsi, notre modèle va considérer que deux segments de grande taille sont très similaires peu importe leur relation. Il faudrait donc rajouter un terme de normalisation dans nos calculs de similarité en divisant, par exemple, par la taille du plus grand des deux segments.
+
+Dans l'exemple ci-dessous, le score entre \og [ four suspected militants ] \fg{} et \og [ in Russia coal mine blast ]  \fg{} vaut 5 tandis que les autres scores sont nuls alors que [kills] et [killed] devraient avoir un score de similarité proche de 5. On remarque cependant que \og [ kills ] \fg{} et \og [ killed ] \fg{} ont bien été alignés :
+\begin{eqnarray*}
+\textbf{Phrase 1 : [ Drone strike ] [ kills ] [ four suspected militants ] [ in Pakistan ]}\\
+\textbf{Phrase 2 : [ Ten ] [ killed ] [ in Russia coal mine blast ]}\\
+\textrm{[ kills ] <-> [ killed ] (score 0)}\\
+\textrm{[ four suspected militants ] <-> [ in Russia coal mine blast ] (score 5)}\\
+\textrm{[in Pakistan] <-> [Ten] (score 0)}
+\end{eqnarray*}
+
+
+De même, on voit que le score de similarité le plus important (score 5 entre \og [ four suspected militants ] \fg{} et \og [ as Maracana re-opens ]\fg{}) correspond aux deux segments les plus grands :
+\begin{eqnarray*}
+\textbf{Phrase 1 : [ Drone strike ] [ kills ] [ four suspected militants ] [ in Pakistan ]}\\
+\textbf{Phrase 2 : [ Brazil ] [ held ] [ by England ] [ 2-2 ] [ as Maracana re-opens ]}\\
+\textrm{[ Drone strike ] <-> [ by England ] (score 2)}\\
+\textrm{[ kills ] <-> [ 2-2 ] (score 0)}\\
+\textrm{[ four suspected militants ] <-> [ as Maracana re-opens ] (score 5)}\\
+\textrm{[in Pakistan] <-> [held] (score 0)}
+\end{eqnarray*}
+
+    \subsection{Modèle proposé}
      Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit notamment les embedding et tokenizer mis à disposition dans les librairies transformers.
+
+ \subsubsection{Architecture}
+ \subsubsection{Ressources supplémentaires}
+ \subsubsection{Étude des performances}
+ \paragraph{Segments comparables}
+        \hfill \break
+En nous inspirant de \cite{banjade}, nous allons introduire des règles dans l’alignement des segments pour aligner uniquement ceux qui sont \og comparables \fg{} et ainsi améliorer les performances de notre modèle à l'état de l'art. En effet, nous avons remarqué, après avoir fait un \og embedding \fg{} en utilisant \textit{SentenceTransformer}, que les tokens \og 12 \fg{} et \og amour \fg{} ont une similarité du cosinus plus élevée que les tokens \og amour \fg{} et  \og haine \fg{}. Ceci est contre-intuitif étant donné que \og amour \fg{} et \og haine \fg{} sont tous les deux des noms communs et appartiennent à la même thématique contrairement aux deux premiers. C'est peut-être dû au fait qu'ils sont antonymes l’un de l’autre, mais les similarités du cosinus sont toutes les deux positives ce qui contredit cette hypothèse.
+Pour remédier à ce problème qui pourrait grandement diminuer les performances de notre modèle, nous décidons donc d’uniquement aligner les segments correspondant au même type d’entité NER. Pour cela, nous utilisons la variable \textit{entity\_group} renvoyée pour chaque segment par notre modèle.
+
+\textbf{N.B. :} Dans le cas de \og 12 \fg{} et \og amour \fg{}, pas sûr que ça résolve notre problème...
+
+ \textit{entity\_group}(12) = \textit{entity\_group}(amour) = NP
 
     \printbibliography
 \end{document}
