@@ -116,7 +116,9 @@ Les données en entrée du réseau récurrent correspondent à des représentati
 
  \paragraph{Remarques :}
  Même si le modèle n’a pas à prédire d’étiquette ‘O’ pour un mot de la phrase, on lui laisse la possibilité de le faire uniquement afin de pouvoir ajouter une classe \og padding \fg{} qui nous permettra d’uniformiser la taille des phrases du dataset en entrée du modèle.
+
 De plus, il faut être vigilant lors de l’évaluation de la précision du modèle, car il ne faut pas prendre en compte la performance du modèle quant à la prédiction du \og padding \fg{} à la fin de la phrase. Ainsi, afin d’évaluer le score pour une phrase, nous partons des prédictions de fin de phrase et commençons à calculer le score à partir du moment ou la vraie étiquette est différente de ‘O’ (c'est-à-dire le moment où il ne s’agit plus d'étiquettes associées au \og padding \fg{}, car il n’y a pas de labels ‘O’ présents à l’origine dans notre dataset.)
+
 Enfin, les performances à apporter à notre modèle sont la prise en compte, lors de l’entraînement, qu’une diminution du \textit{loss} lié à la capacité de prédiction du \og padding \fg{} n’est pas l’important pour le modèle. Nous aimerions pouvoir déterminer quand stopper l’entraînement avant de sur-apprendre le \og padding \fg{}. Nous ne pouvons pas mettre en place de solution de régularisation classique, car le \og padding \fg{} a été créé comme une étiquette à prédire pour le modèle.
 
 \subsubsection{Alignement des segments}
@@ -170,8 +172,11 @@ De même, on voit que le score de similarité le plus important (score 5 entre \
  Étude des performances
  [comparer aux résultats de 2016]
  \subsubsection{Points forts / faibles}
- [Avantage et inconvénient de notre modèle...]
- Cf. alignemnt de phrases de même longueur !
+ Un des points forts de notre modèle est qu'il utilise le modèle de segmentation de \textit{BERT} qui a été pré-entraîné sur des millions de données. Ceci nous permet d'avoir un modèle plus performant et plus généraliste qu'un modèle de segmentation uniquement entraîné sur nos données.
+
+Concernant les points faibles de notre approche, le système d'alignement des segments les plus proches ne fonctionne pas pour le moment pour tous les segments et nous avons pu voir dans les résultats de notre système de base, que l'alignement de certains segments de même longueur est favorisé par notre modèle peu importe le contenu des segments.
+
+La correction de ces dysfonctionnements serait une piste d'amélioration si l'on avait plus de temps pour continuer à améliorer le projet.
  \subsubsection{Perspectives}
  \paragraph{Segments comparables}
        \hfill \break
