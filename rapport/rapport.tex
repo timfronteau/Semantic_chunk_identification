@@ -9,6 +9,7 @@
 \usepackage{etoolbox}
 \usepackage{lmodern}
 \usepackage{hyperref}
+\usepackage{graphicx}
 
 %%% Biblio %%%
 
@@ -46,7 +47,23 @@
 
         \subsubsection{Campagne d’évaluation SEMEVAL}
 
-    Les campagnes SEMEVAL sont organisées tous les ans et regroupent plusieurs défis en lien avec la représentation du sens du texte. La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. Elle consiste à comparer deux phrases en anglais selon leur similarité. Cependant, au lieu de comparer les phrases entières, ici il faut d’abord découper la phrase en segments. En effet, la STS mesure le degré d'équivalence sémantique entre des segments de texte appariés. La STS interprétable (iSTS), quant à elle, ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants doivent d'abord identifier les segments dans chaque phrase, puis aligner les segments des deux phrases en indiquant la relation et le score de similarité de chaque alignement. Nous nous contenterons d'établir le score de similarité et n'indiquerons donc pas quelle est la relation (équivalence, implication, ...) entre les segments comparables dans les paires de phrases.
+    Les campagnes SEMEVAL sont organisées tous les ans et regroupent plusieurs défis en lien avec la représentation du sens du texte. La tâche Interpretable Semantic Textual Similarity a été proposée lors des campagnes d’évaluation SEMEVAL de 2016. Elle consiste à comparer deux phrases en anglais selon leur similarité. Cependant, au lieu de comparer les phrases entières, ici il faut d’abord découper la phrase en segments. En effet, la STS mesure le degré d'équivalence sémantique entre des segments de texte appariés. La STS interprétable (iSTS), quant à elle, ajoute une couche explicative. Étant donné des paires de phrases données en entrée, les participants doivent d'abord identifier les segments dans chaque phrase, puis aligner les segments des deux phrases en indiquant la relation et le score de similarité de chaque alignement, de la manière suivante : \hfill \linebreak
+ \paragraph{Étape 1 :}\mbox{}\\
+ \begin{eqnarray*}
+\textbf{12 killed in bus accident in Pakistan}\\
+\textrm{[ 12 ] [ killed ] [ in bus accident ] [ in Pakistan ]}\\
+\textbf{10 killed in road accident in NW Pakistan}\\
+\textrm{[ 10 ] [ killed ] [ in road accident ] [ in NW Pakistan ]}\\
+\end{eqnarray*}
+  \paragraph{Étape 2 :}\mbox{}\\
+ \begin{eqnarray*}
+\textrm{[ 12 ] < = > [ 10 ] : ( SIMILAR 4 )}\\
+\textrm{[ killed ] < = > [ killed ] : ( EQUIVALENT 5 )}\\
+\textrm{[ in bus accident ] < = > [ in road accident ] : ( MORE-SPECIFIC 4 )}\\
+\textrm{[ in Pakistan ] < = > [ in NW Pakistan ] : ( MORE-GENERAL 4 )}
+\end{eqnarray*}
+
+ Nous nous contenterons d'établir le score de similarité et n'indiquerons donc pas quelle est la relation (équivalence, implication, ...) entre les segments comparables dans les paires de phrases.
 
         \subsubsection{Shared Task}
  Dans cette section, nous décrivons les méthodes d'approche et techniques d'apprentissage proposées par la communauté scientifique en réponse à la \og shared task \fg{}.
@@ -74,6 +91,14 @@ En outre, la comparaison entre le classement effectué à partir des phrases seg
         \paragraph{IISCNLP}
         \hfill \break
  Les auteurs du système IISCNLP \cite{tekumalla} proposent un algorithme d’alignement multiple : iMATCH. Il est basé sur de la programmation linéaire en nombre entier et un alignement monolingue au niveau des segments. Tout d’abord, un segment \og gold \fg{} est utilisé. Si aucun n’est donné, la tâche est passée à \textit{OpenNLP Chunk} et \textit{Standford-core-nlp}. Ils utilisent ensuite une forêt d'arbres décisionnels \og one-vs-rest \fg{}. Les ponctuations et espaces inutiles sont retirés, les unicodes sont convertis au format ASCII et une normalisation est effectuée puis des caractéristiques sont extraites pour la classification. Leur normalisation est effectuée avant l’entraînement et la prédiction. Enfin, le classifieur qui prédit le score utilise une autre forêt d'arbres décisionnels \og one-vs-rest \fg{}. Chaque score est considéré comme une classe entre 0 et 1 où 0 signifie que les segments ne sont pas alignés. L’inconvénient du système est qu’il est soumis à la qualité des segments. Elle a un grand impact sur l’alignement et donc sur le score final. Dans la plupart des cas, l’algorithme prédit le meilleur score d’alignement. Cependant, il bénéficierait d’autres caractéristiques qui améliorent la précision de la classification. Des techniques d’alignements simultanés pourraient aussi augmenter ses performances.
+
+ \paragraph{Résultats}\mbox{}\\
+\begin{center}
+ \includegraphics[width=16cm,angle=0]{truncated_results.png}
+\begin{figure}[!h]
+\caption{Résultats (tronqués) de la \og shared task \fg{}}
+\end{figure}
+ \end{center}
 
 
     \subsection{Cadre expérimental}
@@ -119,13 +144,13 @@ Les données en entrée du réseau récurrent correspondent à des représentati
 
 De plus, il faut être vigilant lors de l’évaluation de la précision du modèle, car il ne faut pas prendre en compte la performance du modèle quant à la prédiction du \og padding \fg{} à la fin de la phrase. Ainsi, afin d’évaluer le score pour une phrase, nous partons des prédictions de fin de phrase et commençons à calculer le score à partir du moment ou la vraie étiquette est différente de ‘O’ (c'est-à-dire le moment où il ne s’agit plus d'étiquettes associées au \og padding \fg{}, car il n’y a pas de labels ‘O’ présents à l’origine dans notre dataset.)
 
-Enfin, les performances à apporter à notre modèle sont la prise en compte, lors de l’entraînement, qu’une diminution du \textit{loss} lié à la capacité de prédiction du \og padding \fg{} n’est pas l’important pour le modèle. Nous aimerions pouvoir déterminer quand stopper l’entraînement avant de sur-apprendre le \og padding \fg{}. Nous ne pouvons pas mettre en place de solution de régularisation classique, car le \og padding \fg{} a été créé comme une étiquette à prédire pour le modèle.
+Enfin, les améliorations à apporter à notre modèle sont la prise en compte, lors de l’entraînement, qu’une diminution du \textit{loss} lié à la capacité de prédiction du \og padding \fg{} n’est pas l’important pour le modèle. Nous aimerions pouvoir déterminer quand stopper l’entraînement avant de sur-apprendre le \og padding \fg{}. Nous ne pouvons pas mettre en place de solution de régularisation classique, car le \og padding \fg{} a été créé comme une étiquette à prédire pour le modèle.
 
 \subsubsection{Alignement des segments}
 
 En s’inspirant des modèles de Banjade et al. \cite{banjade}  \cite{banjadeautre}, nous utilisons la méthode de Kuhn-Munkres pour optimiser l’alignement entre les mots puis l’alignement entre les segments et obtenir une similarité globale maximale. La similarité d’un segment ou d’une phrase est calculée en faisant la somme des similarités des éléments le constituant une fois ces derniers alignés de manière optimale. Pour cela, nous utilisons la fonction \og linear\_sum\_assignment \fg{} de la bibliothèque \textit{scipy.optimize}. Cette fonction prend en entrée une matrice $M$ telle que $M_{ij}$ correspond à la similarité de l’élément i du 1er segment ou phrase et de l’élément j du 2nd segment ou phrase et renvoie la combinaison de coefficients des deux segments ou phrases optimisant la similarité globale. On utilise tout d’abord cette fonction sur les segments 2 par 2. On cherche donc à aligner les mots de ces 2 segments de manière optimale pour déterminer leur similarité.
 
- On remplit la matrice $M$ en calculant la similarité entre deux mots avec la formule suivante :
+ On remplit la matrice $M$ en calculant la similarité du cosinus entre deux mots avec la formule suivante :
  \begin{equation}
     sim(mot_{1}, mot_{2})=\frac{\langle mot_{1}, mot_{2}\rangle}{|mot_{1}||mot_{2}|}
  \end{equation}
@@ -169,8 +194,10 @@ De même, on voit que le score de similarité le plus important (score 5 entre \
 
  \subsection{Analyse des résultats obtenus}
  \subsubsection{Évaluation}
- Étude des performances
- [comparer aux résultats de 2016]
+ \paragraph{En théorie}
+ \paragraph{Dans les faits}
+
+
  \subsubsection{Points forts / faibles}
  Un des points forts de notre modèle est qu'il utilise le modèle de segmentation de \textit{BERT} qui a été pré-entraîné sur des millions de données. Ceci nous permet d'avoir un modèle plus performant et plus généraliste qu'un modèle de segmentation uniquement entraîné sur nos données.
 
@@ -181,7 +208,9 @@ La correction de ces dysfonctionnements serait une piste d'amélioration si l'on
  \paragraph{Segments comparables}
        \hfill \break
 En nous inspirant de \cite{banjade}, nous allons introduire des règles dans l’alignement des segments pour aligner uniquement ceux qui sont \og comparables \fg{} et ainsi améliorer les performances de notre modèle à l'état de l'art. En effet, nous avons remarqué, après avoir fait un \og embedding \fg{} en utilisant \textit{SentenceTransformer}, que les tokens \og 12 \fg{} et \og amour \fg{} ont une similarité du cosinus plus élevée que les tokens \og amour \fg{} et  \og haine \fg{}. Ceci est contre-intuitif étant donné que \og amour \fg{} et \og haine \fg{} sont tous les deux des noms communs et appartiennent à la même thématique contrairement aux deux premiers. C'est peut-être dû au fait qu'ils sont antonymes l’un de l’autre, mais les similarités du cosinus sont toutes les deux positives ce qui contredit cette hypothèse.
+
 Pour remédier à ce problème qui pourrait grandement diminuer les performances de notre modèle, nous décidons donc d’uniquement aligner les segments correspondant au même type d’entité NER. Pour cela, nous utilisons la variable \textit{entity\_group} renvoyée pour chaque segment par notre modèle.
- \paragraph{Top du top} serait de fine-tuner le modèle de chunkage de BERT ?
+
+ Une autre piste d'amélioration serait d'ajuster (fine-tuner) le modèle de segmentation de BERT sur nos données d'entraînement pour obtenir de meilleures performances.
     \printbibliography
 \end{document}
