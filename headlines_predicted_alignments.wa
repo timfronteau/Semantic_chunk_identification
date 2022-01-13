@@ -1,0 +1,333 @@
+<sentence id="1" status="">
+// [ Former Nazi death camp guard Demjanjuk ] [ dead ] [ at ] [ 91 ]
+// [ John Demjanjuk ] [ convicted Nazi death camp guard ] [ dies ] [ aged ] [ 91 ]
+<source>
+1 Former
+2 Nazi
+3 death
+4 camp
+5 guard
+6 Demjanjuk
+7 dead
+8 at
+9 91
+</source>
+<translation>
+1 John
+2 Demjanjuk
+3 convicted
+4 Nazi
+5 death
+6 camp
+7 guard
+8 dies
+9 aged
+10 91
+</translation>
+<alignment>
+[1, 2, 3, 4, 5, 6] <==> [3, 4, 5, 6, 7] // EQUI // 11 // ['Former', 'Nazi', 'death', 'camp', 'guard', 'Demjanjuk'] <==> ['convicted', 'Nazi', 'death', 'camp', 'guard']
+[7] <==> [8] // EQUI // 2 // ['dead'] <==> ['dies']
+[8] <==> [9] // EQUI // 2 // ['at'] <==> ['aged']
+[9] <==> [10] // EQUI // 2 // ['91'] <==> ['91']
+</alignment>
+</sentence>
+
+
+<sentence id="2" status="">
+// [ Saudis ] [ to permit ] [ women ] [ to compete ] [ in ] [ Olympics ]
+// [ Saudi Women ] [ Allowed To Compete ] [ At ] [ Olympics ]
+<source>
+1 Saudis
+2 to
+3 permit
+4 women
+5 to
+6 compete
+7 in
+8 Olympics
+</source>
+<translation>
+1 Saudi
+2 Women
+3 Allowed
+4 To
+5 Compete
+6 At
+7 Olympics
+</translation>
+<alignment>
+[4] <==> [1, 2] // EQUI // 1 // ['women'] <==> ['Saudi', 'Women']
+[5, 6] <==> [3, 4, 5] // EQUI // 5 // ['to', 'compete'] <==> ['Allowed', 'To', 'Compete']
+[7] <==> [6] // EQUI // 2 // ['in'] <==> ['At']
+[8] <==> [7] // EQUI // 2 // ['Olympics'] <==> ['Olympics']
+</alignment>
+</sentence>
+
+
+<sentence id="3" status="">
+// [ US drone strike ] [ kills ] [ 5 militants ] [ in ] [ Pakistan ]
+// [ Drone strike ] [ kills ] [ four suspected militants ] [ in ] [ Pakistan ]
+<source>
+1 US
+2 drone
+3 strike
+4 kills
+5 5
+6 militants
+7 in
+8 Pakistan
+</source>
+<translation>
+1 Drone
+2 strike
+3 kills
+4 four
+5 suspected
+6 militants
+7 in
+8 Pakistan
+</translation>
+<alignment>
+[1, 2, 3] <==> [1, 2] // EQUI // 2 // ['US', 'drone', 'strike'] <==> ['Drone', 'strike']
+[4] <==> [3] // EQUI // 2 // ['kills'] <==> ['kills']
+[5, 6] <==> [4, 5, 6] // EQUI // 4 // ['5', 'militants'] <==> ['four', 'suspected', 'militants']
+[7] <==> [7] // EQUI // 2 // ['in'] <==> ['in']
+[8] <==> [8] // EQUI // 3 // ['Pakistan'] <==> ['Pakistan']
+</alignment>
+</sentence>
+
+
+<sentence id="4" status="">
+// [ Syria peace plan conditions ] [ unacceptable ] [ opposition ] [ says ]
+// [ Syria peace ] [ dashed ] [ as ] [ deadline ] [ passes ]
+<source>
+1 Syria
+2 peace
+3 plan
+4 conditions
+5 unacceptable
+6 opposition
+7 says
+</source>
+<translation>
+1 Syria
+2 peace
+3 dashed
+4 as
+5 deadline
+6 passes
+</translation>
+<alignment>
+[1, 2, 3, 4] <==> [1, 2] // EQUI // 3 // ['Syria', 'peace', 'plan', 'conditions'] <==> ['Syria', 'peace']
+[5] <==> [3] // EQUI // 2 // ['unacceptable'] <==> ['dashed']
+[6] <==> [6] // EQUI // 2 // ['opposition'] <==> ['passes']
+[7] <==> [4] // EQUI // 2 // ['says'] <==> ['as']
+</alignment>
+</sentence>
+
+
+<sentence id="5" status="">
+// [ Syrian regime ] [ denies ] [ role ] [ in ] [ Houla massacre ]
+// [ Syria ] [ blame ] [ s ] [ rebels ] [ for ] [ Houla massacre ] [ of ] [ over 100 ]
+<source>
+1 Syrian
+2 regime
+3 denies
+4 role
+5 in
+6 Houla
+7 massacre
+</source>
+<translation>
+1 Syria
+2 blame
+3 s
+4 rebels
+5 for
+6 Houla
+7 massacre
+8 of
+9 over
+10 100
+</translation>
+<alignment>
+[1, 2] <==> [9, 10] // EQUI // 1 // ['Syrian', 'regime'] <==> ['over', '100']
+[3] <==> [2] // EQUI // 2 // ['denies'] <==> ['blame']
+[4] <==> [3] // EQUI // 2 // ['role'] <==> ['s']
+[5] <==> [8] // EQUI // 2 // ['in'] <==> ['of']
+[6, 7] <==> [6, 7] // EQUI // 5 // ['Houla', 'massacre'] <==> ['Houla', 'massacre']
+</alignment>
+</sentence>
+
+
+<sentence id="6" status="">
+// [ China stocks ] [ close ] [ mixed ] [ Friday ]
+// [ Chinese stocks ] [ close ] [ higher ] [ midday ] [ Friday ]
+<source>
+1 China
+2 stocks
+3 close
+4 mixed
+5 Friday
+</source>
+<translation>
+1 Chinese
+2 stocks
+3 close
+4 higher
+5 midday
+6 Friday
+</translation>
+<alignment>
+[1, 2] <==> [1, 2] // EQUI // 2 // ['China', 'stocks'] <==> ['Chinese', 'stocks']
+[3] <==> [3] // EQUI // 2 // ['close'] <==> ['close']
+[4] <==> [4] // EQUI // 1 // ['mixed'] <==> ['higher']
+[5] <==> [6] // EQUI // 2 // ['Friday'] <==> ['Friday']
+</alignment>
+</sentence>
+
+
+<sentence id="7" status="">
+// [ Mall attackers ] [ used ] [ ` ] [ less ] [ is ] [ more ] [ strategy ]
+// [ In ] [ Kenya ] [ attackers ] [ used ] [ ` ] [ less ] [ is ] [ more ] [ strategy ]
+<source>
+1 Mall
+2 attackers
+3 used
+4 `
+5 less
+6 is
+7 more
+8 strategy
+</source>
+<translation>
+1 In
+2 Kenya
+3 attackers
+4 used
+5 `
+6 less
+7 is
+8 more
+9 strategy
+</translation>
+<alignment>
+[1, 2] <==> [3] // EQUI // 1 // ['Mall', 'attackers'] <==> ['attackers']
+[3] <==> [4] // EQUI // 2 // ['used'] <==> ['used']
+[4] <==> [5] // EQUI // 2 // ['`'] <==> ['`']
+[5] <==> [6] // EQUI // 2 // ['less'] <==> ['less']
+[6] <==> [7] // EQUI // 2 // ['is'] <==> ['is']
+[7] <==> [8] // EQUI // 3 // ['more'] <==> ['more']
+[8] <==> [9] // EQUI // 3 // ['strategy'] <==> ['strategy']
+</alignment>
+</sentence>
+
+
+<sentence id="8" status="">
+// [ 6.8 quake strikes ] [ off ] [ Solomon Islands ]
+// [ Magnitude 6.3 quake ] [ strikes ] [ off ] [ Solomon Islands ] [ USGS ]
+<source>
+1 6.8
+2 quake
+3 strikes
+4 off
+5 Solomon
+6 Islands
+</source>
+<translation>
+1 Magnitude
+2 6.3
+3 quake
+4 strikes
+5 off
+6 Solomon
+7 Islands
+8 USGS
+</translation>
+<alignment>
+[1, 2, 3] <==> [1, 2, 3] // EQUI // 4 // ['6.8', 'quake', 'strikes'] <==> ['Magnitude', '6.3', 'quake']
+[4] <==> [5] // EQUI // 3 // ['off'] <==> ['off']
+[5, 6] <==> [6, 7] // EQUI // 5 // ['Solomon', 'Islands'] <==> ['Solomon', 'Islands']
+</alignment>
+</sentence>
+
+
+<sentence id="9" status="">
+// [ Friends ] [ of ] [ Syria ] [ recognizes ] [ opposition coalition ] [ as ] [ legitimate representative ] [ of ] [ Syrian people ]
+// [ U.S. ] [ Friends ] [ of ] [ Syria ] [ recognize ] [ opposition ] [ as ] [ sole representative ]
+<source>
+1 Friends
+2 of
+3 Syria
+4 recognizes
+5 opposition
+6 coalition
+7 as
+8 legitimate
+9 representative
+10 of
+11 Syrian
+12 people
+</source>
+<translation>
+1 U.S.
+2 Friends
+3 of
+4 Syria
+5 recognize
+6 opposition
+7 as
+8 sole
+9 representative
+</translation>
+<alignment>
+[10] <==> [1] // EQUI // 0 // ['of'] <==> ['U.S.']
+[11, 12] <==> [2] // EQUI // 2 // ['Syrian', 'people'] <==> ['Friends']
+[2] <==> [3] // EQUI // 3 // ['of'] <==> ['of']
+[3] <==> [4] // EQUI // 2 // ['Syria'] <==> ['Syria']
+[4] <==> [5] // EQUI // 2 // ['recognizes'] <==> ['recognize']
+[5, 6] <==> [6] // EQUI // 3 // ['opposition', 'coalition'] <==> ['opposition']
+[7] <==> [7] // EQUI // 2 // ['as'] <==> ['as']
+[8, 9] <==> [8, 9] // EQUI // 4 // ['legitimate', 'representative'] <==> ['sole', 'representative']
+</alignment>
+</sentence>
+
+
+<sentence id="10" status="">
+// [ 7 ] [ detained ] [ for ] [ ` ] [ house sister ] [ ' scandal ]
+// [ China ] [ det ] [ ains ] [ 7 ] [ for ] [ ` ] [ ` house sister ' ] [ ' scandal ]
+<source>
+1 7
+2 detained
+3 for
+4 `
+5 house
+6 sister
+7 '
+8 scandal
+</source>
+<translation>
+1 China
+2 det
+3 ains
+4 7
+5 for
+6 `
+7 `
+8 house
+9 sister
+10 '
+11 '
+12 scandal
+</translation>
+<alignment>
+[1] <==> [4] // EQUI // 0 // ['7'] <==> ['7']
+[2] <==> [2] // EQUI // 2 // ['detained'] <==> ['det']
+[3] <==> [5] // EQUI // 2 // ['for'] <==> ['for']
+[4] <==> [6] // EQUI // 2 // ['`'] <==> ['`']
+[5, 6] <==> [7, 8, 9, 10] // EQUI // 5 // ['house', 'sister'] <==> ['`', 'house', 'sister', "'"]
+[7, 8] <==> [11, 12] // EQUI // 2 // ["'", 'scandal'] <==> ["'", 'scandal']
+</alignment>
+</sentence>
+
+
