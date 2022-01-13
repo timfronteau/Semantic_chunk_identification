@@ -15,6 +15,7 @@ test_goldStandard/
 train_students_answers_2015_10_27.utf-8/
 
 *.pdf
+ressources/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
