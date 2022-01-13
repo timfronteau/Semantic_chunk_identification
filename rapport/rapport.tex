@@ -132,9 +132,7 @@ Voici un exemple de phrase que nous devons analyser :
  \paragraph{Alignement et score de similarité}
     \hfill \break
     \textit{En entrée}: deux fichiers. Le premier contient les premières phrases de chaque paire avec des '[' et ']' pour marquer les segments. Le second contient les deuxièmes phrases de chaque paire avec des '[' et ']' pour marquer les segments. \hfill \break
-    \textit{En sortie}: Un fichier .wa (de type xml) qui, pour une ligne par alignement, contient l'indice d'un token de la première phrase d'une paire, l'indice d'un token de la deuxième phrase de la paire et le score de similarité associé.
-
-
+    \textit{En sortie}: Un fichier .wa (de type xml) qui, pour une ligne par alignement, contient l'indice des token d'un segment pour la première phrase d'une paire, les indices des tokens consitutant un segment de la deuxième phrase de la paire et le score de similarité associé.
 
     \subsection{Baseline}
 
@@ -152,7 +150,28 @@ Dans une optique d’amélioration de notre segmentation et de développement d'
     \subsubsection{Création de segments}
  Afin de réaliser la segmentation des phrases, nous avons créé un modèle afin de prédire et délimiter les unités de sens dans une phrase. À l’aide de ce modèle, nous cherchons à réaliser l'encodage BIO d’une phrase, c’est-à-dire prédire un label pour chaque mot de la phrase parmi ‘B’ (Begin), ‘I’ (Inside) ou ‘O’ (Outside) ; ces significations faisant référence à l’appartenance du mot à une unité de sens. Nous avons fait le choix d’un modèle récursif de type \og Simple RNN \fg{}. Les étiquettes nous permettent ensuite de délimiter les segments de la phrase avant de passer à l’étape de leur alignement.
 
+  \begin{center}
+ \includegraphics[width=14cm,angle=0]{chunks.png}
+\begin{figure}[!h]
+\caption{Exemples de phrases segmentées par le modèle récurrent}
+\end{figure}
+ \end{center}
+
 Les données en entrée du réseau récurrent correspondent à des représentations vectorielles (issues d’une couche d’embeddings de GloVe) des mots d’une phrase, initialement tokenisés. Les étiquettes utilisées pour l'entraînement correspondent aux représentations \og one-hot  \fg{} des étiquettes BIO (encodées 0, 1, 2) de chacun des mots des phrases déjà segmentées mises à disposition dans le set de données du concours SemEval.
+
+   \begin{center}
+ \includegraphics[width=10cm,angle=0]{loss.png}
+\begin{figure}[!h]
+\caption{Courbe de précision du modèle de segmentation}
+\end{figure}
+ \end{center}
+
+ \begin{center}
+ \includegraphics[width=10cm,angle=0]{loss.png}
+\begin{figure}[!h]
+\caption{Courbe de loss du modèle de segmentation}
+\end{figure}
+ \end{center}
 
  \paragraph{Remarques :}
  Même si le modèle n’a pas à prédire d’étiquette ‘O’ pour un mot de la phrase, on lui laisse la possibilité de le faire uniquement afin de pouvoir ajouter une classe \og padding \fg{} qui nous permettra d’uniformiser la taille des phrases du dataset en entrée du modèle.
@@ -204,7 +223,7 @@ De même, on voit que le score de similarité le plus important (score 5 entre \
      Ce qui est difficile, c’est de prendre en compte la variabilité dans les façons d’exprimer des informations dans des phrases similaires. Cette tâche date d’avant l’adoption généralisée de modèles neuronaux comme BERT. Dans un second temps, nous proposerons donc une solution qui met à profit notamment les embedding et tokenizer mis à disposition dans les librairies transformers.
 
  \subsubsection{Architecture et ressources supplémentaires}
- Lien vers le code-source du modèle : \href{https://github.com/timfronteau/Semantic_chunk_identification}{CLIQUER ICI !}
+ \textbf{Lien vers le code-source du modèle : \href{https://github.com/timfronteau/Semantic_chunk_identification}{CLIQUER ICI !}} \hfill \linebreak
 
  Après avoir cherché des modèles de pointes pour résoudre notre tâche, nous avons choisi d’utiliser un modèle pré-entraîné de \og BERT \fg{}, nommé \textit{vblagoje/bert-english-uncased-finetuned-chunk}. Il nous permet de prédire les segments d’une phrase plus facilement et en profitant . Voici l’architecture de notre pipeline : tout d’abord, on effectue une phase de prétraitement, comme on l'avait fait pour notre \og Baseline \fg{}. Pour cela, on utilise la fonction \textit{AutoTokenizer} de la librairie \textit{transformers}. Puis on utilise notre modèle pré-entraîné de BERT. On insère le tout dans une pipeline qui produit les segments. Ensuite, on réalise les alignements à la manière dont cela a été fait dans notre baseline. À une question de temps prêt, notre modèle est prêt à être évalué.
 \paragraph{Remarque}
@@ -213,8 +232,10 @@ De même, on voit que le score de similarité le plus important (score 5 entre \
  \subsection{Analyse des résultats obtenus}
  \subsubsection{Évaluation}
  \paragraph{En théorie}
+ L'évaluation aurait dû être basée sur l'utilisation du F1 de la précision et du rappel des alignements de tokens. C'est apparemment une meilleure mesure que d'autres alternatives telles que le taux d'erreur d'alignement. L'idée est que, pour chaque paire de segments qui sont alignés, on considère que toutes les paires de tokens dans les segments sont également alignées avec un certain poids. Le poids de chaque alignement token-token est l'inverse du nombre d'alignements de chaque token. La précision est mesurée comme le ratio des alignements token-token qui existent à la fois dans le système et dans les fichiers de référence, divisé par le nombre d'alignements dans le système. Le rappel est mesuré de façon similaire, comme le rapport des alignements token-token qui existent à la fois dans le système et dans la référence \og gold \fg{}, divisé par le nombre d'alignements dans la référence \og gold \fg{}. La précision et le rappel sont évalués séparément pour tous les alignements de toutes les paires. Si on avait eu plus de temps, on aurait évalué nos fichiers en utilisant deux métriques différentes parmi les quatre proposées par la \og shared task\fg{} : F1 où le type d'alignement et le score sont ignorés ce qui nous permet de vérifier implicitement l'alignement de nos segments et F1 où le type d'alignement est ignoré, mais où chaque alignement est pénalisé lorsque les scores ne correspondent pas, afin d'évaluer nos scores d'alignement. En effet, nous n'avons pas travaillé sur le type, la relation d'alignement et avions pour objectif au moment de lancer les scripts d'évaluation de le fixer à "EQUI" (un type choisi aléatoirement parmi ceux qu'on aurait pu prédire). Le score F1 est la principale métrique globale.
  \paragraph{Dans les faits}
- Bien que nous ayons le bon format pour utiliser la méthode d’évaluation fournie par le site, nous manquons de temps pour transformer toutes nos données au dit format \og .wa \fg{}. Pour pallier à ce problème, nous avons décidé de créer notre propre méthode d’évaluation au moins pour les segments. Deux manières d’évaluation nous sont venues à l’esprit. La première est l’évaluation par mot. On compare la prédiction B, I ou O du modèle avec l'étiquette. La deuxième est l’évaluation par segments. On compare si chaque segment est égal à l'étiquette. Nous avons retenu la deuxième solution qui nous paraît plus représentative de la réalité. En effet, un segment n’a de sens, seulement s’il est complet.
+ Bien que nous ayons écrit une fonction capable de générer à la sortie de notre système un fichier similaire à ceux fournis au format \og .wa \fg{} pour utiliser la méthode d’évaluation fournie par le site, nous manquons de temps pour transformer toutes nos données au dit format \og .wa \fg{}. Pour pallier à ce problème, nous avons décidé de créer notre propre méthode d’évaluation au moins pour les segments. Deux manières d’évaluation nous sont venues à l’esprit. La première est l’évaluation par mot. On compare la prédiction B, I ou O du modèle avec l'étiquette. La deuxième est l’évaluation par segments. On compare si chaque segment est égal à l'étiquette. Nous avons retenu la deuxième solution qui nous paraît plus représentative de la réalité. En effet, un segment n’a de sens, que s’il est complet. \textbf{On obtient 37 \% d'accuracy pour le modèle baseline contre 57 \% d'accuracy pour le modèle à l'état de l'art. C'est rassurant...}
+
 
  \subsubsection{Points forts / faibles}
  Un des points forts de notre modèle est qu'il utilise le modèle de segmentation de \textit{BERT} qui a été pré-entraîné sur des millions de données. Ceci nous permet d'avoir un modèle plus performant et plus généraliste qu'un modèle de segmentation uniquement entraîné sur nos données.
